@@ -1,0 +1,107 @@
+import random
+
+'''Розробити клас "колода карт", що буде включати закритий масив елементів класу "карта".
+В карті буде зберігатися масть та номер.
+При створенні екземпляру класу "колода карт", карти у колоді розташовуються випадковим чином.
+Забезпечити можливість виведення карти за номером розташування у колоді,
+виведення всіх карт, перемішування колоди, видачі однієї карти з колоди, видачі 6 карт з колоди.
+Написати програму, що буде демонструвати всі розроблені елементи класу.'''
+
+
+class Card:
+    '''Клас колода карт'''
+    MAST = ('Піка', 'Трефа', 'Чирва', 'Бубна')
+    RANKS = ('6', '7', '8', '9', '10', 'Валет', 'Дама', 'Король', 'Туз')
+
+    def init(self, mast=0, ranks=0):
+        self.mast = mast
+        self.ranks = ranks
+
+    def str(self):
+        return '{0} {1}'.format(Card.RANKS[self.ranks],
+                                Card.MAST[self.mast][0])
+
+    def cmp(self, other):
+        if self.mast > other.mast: return 1
+        if self.mast < other.mast: return -1
+        if self.mast > other.mast: return 1
+        if self.mast < other.mast: return -1
+        return 0
+
+
+class Deck:
+    def init(self):
+        self.cards = []
+        for mast in range(4):
+            for ranks in range(9):
+                self.cards.append(Card(mast, ranks))
+
+    def print_deck(self):
+        for index, item in enumerate(self.cards):
+            if (index + 1) % 9 == 0:
+                print(item)
+            else:
+               print(item, end=" \t")
+
+    def str(self):
+        s = ""
+        for i in range(len(self.cards)):
+            s += str(self.cards[i]) + "\n"
+        return s
+
+    def shuffle(self):
+        num_cards = len(self.cards)
+        for i in range(num_cards):
+            j = random.randrange(i, num_cards)
+            self.cards[i], self.cards[j] = self.cards[j], self.cards[i]
+
+    def roztash(self):
+        k = int(input("Введіть номер карти: "))
+        # num_cards = len(self.cards)
+        flag = -1
+        for card in self.cards:
+            flag += 1
+            if card == self.cards[k - 1]:
+                return card
+
+    def one_card(self):
+        if not self.cards:
+            return 'Нема'
+        return random.choice(self.cards)
+
+    def six_card(self):
+        lst = []
+        for i in range(6):
+            f = self.cards[random.randrange(0, len(self.cards))]
+            self.cards.remove(f)
+            lst.append(f)
+        return lst
+
+
+if name == 'main':
+    deck = Deck()
+    deck.print_deck()
+    print("Меню")
+    while True:
+        k = int(input("Оберіть функцію\n"
+                      "1 - перемішати колоду\n"
+                      "2 - знайти розташування карти\n"
+                      "3 - витягнути ОДНУ карту\n"
+                      "4 - витягнути ШІСТЬ карт\n"
+                      "5 - вивести всю колоду\n"))
+        if k == 1:
+            deck.shuffle()
+            print(deck)
+        elif k == 2:
+            print(deck.roztash())
+        elif k == 3:
+            print(deck.one_card())
+        elif k == 4:
+            a = deck.six_card()
+            for i in a:
+                print(i)
+        elif k == 5:
+            deck.print_deck()
+        else:
+            print("GoodBye")
+            break
